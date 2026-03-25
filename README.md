@@ -2,6 +2,23 @@
 
 ToDoList app usign Spring Boot and Thymeleaf templates.
 
+## Author
+- **Name:** Ainhoa Rodríguez González
+- **Subject:** Agile Techniques For Software Development
+- **University:** Miguel Hernández University
+
+## Links
+- **Trello board:** [P2 – To Do List app](https://trello.com/invite/b/69c2b830550aa12c7c325dcb/ATTI0e9ade6e7f43927d2641f501df1951b951585052/exercise2-to-do-list-app-atsd)
+- **GitHub repository:** https://github.com/Ainhoa-Rodriguez25/ATSD-Exercise2
+- **Docker Hub:** pending
+
+## Versions
+### Version 1.0.1 (25/03/2026)
+- About webpage added
+
+### Version 1.1.0 (in development)
+- Pending to implement
+
 ## Requirements
 
 You need install on your system:
