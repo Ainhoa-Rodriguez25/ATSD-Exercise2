@@ -81,6 +81,11 @@ public class TareaController {
 
         comprobarUsuarioLogeado(tarea.getUsuarioId());
 
+        // Se añade el usuario al modelo para la navbar
+        Long idUsuarioLogeado = managerUserSession.usuarioLogeado();
+        UsuarioData usuario = usuarioService.findById(idUsuarioLogeado);
+        model.addAttribute("usuario", usuario);
+
         model.addAttribute("tarea", tarea);
         tareaData.setTitulo(tarea.getTitulo());
         return "formEditarTarea";
