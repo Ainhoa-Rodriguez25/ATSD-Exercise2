@@ -22,7 +22,7 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link"
-                       th:href="@{/users/{id}/tasks(id=${user.id})}">
+                       th:href="@{/usuarios/{id}/tareas(id=${usuario.id})}">
                         Tasks
                     </a>
                 </li>
@@ -36,8 +36,8 @@
                        data-toggle="dropdown"
                        aria-haspopup="true"
                        aria-expanded="false"
-                       th:text="${user.name} ?: ${user.email}">
-                        Username
+                       th:text="${usuario.nombre} ?: ${usuario.email}">
+                        User
                     </a>
                     <div class="dropdown-menu dropdown-menu-right"
                          aria-labelledby="navbarDropdown">
@@ -45,7 +45,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item"
                            th:href="@{/logout}"
-                           th:text="'Log Out ' + (${user.name} ?: ${user.email})">
+                           th:text="'Cerrar sesión ' + (${usuario.nombre} ?: ${usuario.email})">
                             Log Out
                         </a>
                     </div>
