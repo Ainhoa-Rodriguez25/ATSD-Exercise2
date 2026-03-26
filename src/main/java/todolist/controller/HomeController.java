@@ -28,7 +28,7 @@ public class HomeController {
         } else {
             model.addAttribute("usuario", null);
         }
-        
+
         return "about";
     }
 }
