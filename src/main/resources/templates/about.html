@@ -3,7 +3,7 @@
 <head th:replace="fragments :: head (titulo='Acerca de')"></head>
 <body>
 
-<div th:replace="${usuario != null} ? 
+<div th:replace="${usuario != null} ?
     ~{fragments :: navbar(usuario=${usuario})} :
     ~{fragments :: navbar-anonymous}">
 </div>
