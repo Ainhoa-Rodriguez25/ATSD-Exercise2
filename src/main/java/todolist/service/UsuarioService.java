@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -71,5 +73,13 @@ public class UsuarioService {
         else {
             return modelMapper.map(usuario, UsuarioData.class);
         }
+    }
+
+    @Transactional(readOnly = true) // Anotación que abre conexión con base de datos en modo lectura
+    public List<UsuarioData> findAll() {
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
+        return usuarios.stream() // procesa datos de forma encadenada
+                .map(usuario -> modelMapper.map(usuario, UsuarioData.class)) // Función lambda que convierte la entidad Usuario a UsuarioData DTO para que este sea devuelto por el controlador
+                .collect(Collectors.toList()); // Junta los elementos procesados por stream (no hace nada hasta que se le pide un resultado (lazy)) en una lista de nuevo
     }
 }

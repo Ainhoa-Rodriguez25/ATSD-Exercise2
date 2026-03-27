@@ -13,14 +13,14 @@ import todolist.service.UsuarioService;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(scripts = "/clean-db.sql", executionPhase = AFTER_TEST_METHOD)
-public class NavbarWebTest {
+public class UsuarioListWebTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,27 +32,27 @@ public class NavbarWebTest {
     private UsuarioService usuarioService;
 
     @Test
-    public void navbarAnonymousShowsLoginAndRegister() throws Exception {
-        // Cuando no hay usuario logueado
-        when(managerUserSession.usuarioLogeado()).thenReturn(null);
+    public void userListShowsRegisteredUsers() throws Exception {
+        // GIVEN
+        // Dos usuarios registrados en la BD
+        UsuarioData usuario1 = new UsuarioData();
+        usuario1.setEmail("usuario1@test.es");
+        usuario1.setPassword("1234");
+        UsuarioData usuarioRegistrado = usuarioService.registrar(usuario1);
 
-        this.mockMvc.perform(get("/about"))
-                .andExpect(content().string(containsString("Login")))
-                .andExpect(content().string(containsString("Registro")));
-    }
+        UsuarioData usuario2 = new UsuarioData();
+        usuario2.setEmail("usuario2@test.es");
+        usuario2.setPassword("5678");
+        usuarioService.registrar(usuario2);
 
-    @Test
-    public void  navbarLoggedShowsUsername() throws Exception {
-        // Cuando hay un usuario logueado
-        UsuarioData usuario = new UsuarioData();
-        usuario.setEmail("richard@umh.es");
-        usuario.setPassword("1234");
-        UsuarioData usuarioRegistrado = usuarioService.registrar((usuario));
+        // Se simula que el usuario 1 está logueado
+        when(managerUserSession.usuarioLogeado())
+                .thenReturn(usuarioRegistrado.getId());
 
-        when(managerUserSession.usuarioLogeado()).thenReturn(usuarioRegistrado.getId());
-
-        this.mockMvc.perform(get("/about"))
-                .andExpect(content().string(containsString("richard@umh.es")))
-                .andExpect(content().string(containsString("Tareas")));
+        // WHEN, THEN
+        // La página /registered muestra los emails de ambos usuarios
+        this.mockMvc.perform(get("/registered"))
+                .andExpect(content().string(containsString("usuario1@test.es")))
+                .andExpect(content().string(containsString("usuario2@test.es")));
     }
 }
