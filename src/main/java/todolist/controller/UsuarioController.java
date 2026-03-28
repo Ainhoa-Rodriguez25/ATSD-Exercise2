@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import todolist.authentication.ManagerUserSession;
 import todolist.dto.UsuarioData;
 import todolist.service.UsuarioService;
@@ -31,5 +32,25 @@ public class UsuarioController {
         model.addAttribute("usuarios", usuarios);
 
         return "listaUsuarios";
+    }
+
+    // Método para obtener descripcion con id usuario logeado
+    @GetMapping("/registered/{id}")
+    public String descripcionUsuario(@PathVariable(value = "id") Long idUsuario, Model model) {
+        // Se obtiene el usuario logueado para la navbar
+        Long idUsuarioLogeado = managerUserSession.usuarioLogeado();
+        UsuarioData usuarioLogeado = usuarioService.findById(idUsuarioLogeado);
+        model.addAttribute("usuario", usuarioLogeado);
+
+        // Se obtiene el usuario que se quiere ver en la descripción
+        UsuarioData usuarioDescripcion = usuarioService.findById(idUsuario);
+
+        if (usuarioDescripcion == null) {
+            throw new RuntimeException("Usurario no encontrado: " + idUsuario);
+        }
+
+        model.addAttribute("usuarioDescripcion", usuarioDescripcion);
+
+        return "descripcionUsuario";
     }
 }
