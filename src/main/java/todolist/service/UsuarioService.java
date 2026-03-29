@@ -82,4 +82,10 @@ public class UsuarioService {
                 .map(usuario -> modelMapper.map(usuario, UsuarioData.class)) // Función lambda que convierte la entidad Usuario a UsuarioData DTO para que este sea devuelto por el controlador
                 .collect(Collectors.toList()); // Junta los elementos procesados por stream (no hace nada hasta que se le pide un resultado (lazy)) en una lista de nuevo
     }
+
+    @Transactional(readOnly = true)
+    public boolean existsAdmin() {
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
+        return usuarios.stream().anyMatch(u -> u.getAdmin() != null && u.getAdmin());
+    }
 }
