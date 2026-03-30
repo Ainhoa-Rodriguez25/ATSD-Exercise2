@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -152,5 +154,66 @@ public class UsuarioServiceTest {
         assertThat(usuario.getId()).isEqualTo(usuarioId);
         assertThat(usuario.getEmail()).isEqualTo("richard@umh.es");
         assertThat(usuario.getNombre()).isEqualTo("Richard Stallman");
+    }
+
+    @Test
+    public void servicioFindAllDevuelveTodosLosUsuarios() {
+        // GIVEN
+        // Dos usuarios registrados en la BD
+        UsuarioData usuario1 = new UsuarioData();
+        usuario1.setEmail("usuario1@test.es");
+        usuario1.setPassword("1234");
+        usuarioService.registrar(usuario1);
+
+        UsuarioData usuario2 = new UsuarioData();
+        usuario2.setEmail("usuario2@test.es");
+        usuario2.setPassword("5678");
+        usuarioService.registrar(usuario2);
+
+        // WHEN
+        // se obtienen todos los usuarios
+        java.util.List<UsuarioData> usuarios = usuarioService.findAll();
+
+        // THEN
+        // la lista contien todos los usuarios registrados
+        assertThat(usuarios).hasSize(2);
+        assertThat(usuarios).extracting("email")
+                .contains("usuario1@test.es", "usuario2@test.es");
+    }
+
+    @Test
+    public void servicioExisteAdminDevuelveFalseSiNoHayAdmin() {
+        // GIVEN
+        // Un usuario registrado que no sea admin
+        UsuarioData usuario = new UsuarioData();
+        usuario.setEmail("noadmin@test.es");
+        usuario.setPassword("1234");
+        usuario.setAdmin(false);
+        usuarioService.registrar(usuario);
+
+        // WHEN
+        boolean existeAdmin = usuarioService.existsAdmin();
+
+        // THEN
+        // no existe admin
+        assertThat(existeAdmin).isFalse();
+    }
+
+    @Test
+    public void servicioExisteAdminDevuelveTrueSiHayAdmin() {
+        // GIVEN
+        // Un usuario registrado que no sea admin
+        UsuarioData admin = new UsuarioData();
+        admin.setEmail("admin@test.es");
+        admin.setPassword("1234");
+        admin.setAdmin(true);
+        usuarioService.registrar(admin);
+
+        // WHEN
+        boolean existeAdmin = usuarioService.existsAdmin();
+
+        // THEN
+        // no existe admin
+        assertThat(existeAdmin).isTrue();
     }
 }
