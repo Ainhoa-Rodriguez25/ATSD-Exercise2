@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,6 +40,7 @@ public class UsuarioDescripcionWebTest {
         usuario.setEmail("descripcion@test.es");
         usuario.setPassword("1234");
         usuario.setNombre("Usuario Test");
+        usuario.setAdmin(true);
         UsuarioData usuarioRegistrado = usuarioService.registrar(usuario);
 
         // Se simula que ese usuario está logueado
@@ -47,6 +49,7 @@ public class UsuarioDescripcionWebTest {
         // WHEN, THEN
         // La pagina /registered/{id} muestra los datos del usuario
         this.mockMvc.perform(get("/registered/" + usuarioRegistrado.getId()))
+                .andExpect(status().isOk())
                 .andExpect(content().string(containsString("descripcion@test.es")))
                 .andExpect(content().string(containsString("Usuario Test")));
     }
@@ -58,6 +61,7 @@ public class UsuarioDescripcionWebTest {
         UsuarioData usuario = new UsuarioData();
         usuario.setEmail("enlace@test.es");
         usuario.setPassword("1234");
+        usuario.setAdmin(true);
         UsuarioData usuarioRegistrado = usuarioService.registrar(usuario);
 
         // Se simula que el usuario está logueado
@@ -66,6 +70,7 @@ public class UsuarioDescripcionWebTest {
         // WHEN, THEN
         // La pagina /registered contiene el enlace a la descripción del usuario
         this.mockMvc.perform(get("/registered"))
+                .andExpect(status().isOk())
                 .andExpect(content().string(containsString("/registered/" + usuarioRegistrado.getId())));
     }
 }

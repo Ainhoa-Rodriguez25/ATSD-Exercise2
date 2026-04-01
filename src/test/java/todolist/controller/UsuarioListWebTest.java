@@ -11,11 +11,14 @@ import todolist.authentication.ManagerUserSession;
 import todolist.dto.UsuarioData;
 import todolist.service.UsuarioService;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,11 +41,13 @@ public class UsuarioListWebTest {
         UsuarioData usuario1 = new UsuarioData();
         usuario1.setEmail("usuario1@test.es");
         usuario1.setPassword("1234");
+        usuario1.setAdmin(true);
         UsuarioData usuarioRegistrado = usuarioService.registrar(usuario1);
 
         UsuarioData usuario2 = new UsuarioData();
         usuario2.setEmail("usuario2@test.es");
         usuario2.setPassword("5678");
+        usuario2.setAdmin(false);
         usuarioService.registrar(usuario2);
 
         // Se simula que el usuario 1 está logueado
@@ -52,6 +57,7 @@ public class UsuarioListWebTest {
         // WHEN, THEN
         // La página /registered muestra los emails de ambos usuarios
         this.mockMvc.perform(get("/registered"))
+                .andExpect(status().isOk())
                 .andExpect(content().string(containsString("usuario1@test.es")))
                 .andExpect(content().string(containsString("usuario2@test.es")));
     }
