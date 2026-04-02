@@ -91,7 +91,7 @@ public class UsuarioService {
         return usuarios.stream().anyMatch(u -> u.getAdmin() != null && u.getAdmin());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UsuarioData blockUser(Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new UsuarioServiceException("Usuario no encontrado"));
         usuario.setBlock(true);
@@ -99,7 +99,7 @@ public class UsuarioService {
         return modelMapper.map(usuario, UsuarioData.class);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UsuarioData unblockUser(Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new UsuarioServiceException("Usuario no encontrado"));
         usuario.setBlock(false);
