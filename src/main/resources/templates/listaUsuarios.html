@@ -33,6 +33,22 @@
                            th:href="@{/registered/{id}(id=${usuario.id})}">
                             Ver descripción
                         </a>
+                        <form th:if="${!usuario.block}"
+                              method="post"
+                              th:action="@{/registered/{id}/block(id=${usuario.id})}"
+                              style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                Bloquear
+                            </button>
+                        </form>
+                        <form th:if="${usuario.block}"
+                              method="post"
+                              th:action="@{/registered/{id}/unblock(id=${usuario.id})}"
+                              style="display:inline;">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                Desbloquear
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
