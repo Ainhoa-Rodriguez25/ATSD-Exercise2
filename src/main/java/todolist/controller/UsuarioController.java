@@ -99,6 +99,6 @@ public class UsuarioController {
         }
 
         usuarioService.unblockUser(idUsuario);
-        return "/redirect:/registered";
+        return "redirect:/registered";
     }
 }
