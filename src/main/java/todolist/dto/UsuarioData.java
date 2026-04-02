@@ -12,6 +12,7 @@ public class UsuarioData {
     private String password;
     private Date fechaNacimiento;
     private Boolean admin = false;
+    private Boolean block = false;
 
     // Getters y setters
 
@@ -57,6 +58,14 @@ public class UsuarioData {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public Boolean getBlock() {
+        return block;
+    }
+
+    public void setBlock(Boolean block) {
+        this.block = block;
     }
 
     // Sobreescribimos equals y hashCode para que dos usuarios sean iguales
