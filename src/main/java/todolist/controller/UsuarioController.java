@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import todolist.authentication.ManagerUserSession;
 import todolist.controller.exception.UsuarioNoAutorizadoException;
 import todolist.dto.UsuarioData;
@@ -66,5 +67,38 @@ public class UsuarioController {
         model.addAttribute("usuarioDescripcion", usuarioDescripcion);
 
         return "descripcionUsuario";
+    }
+
+    // Endpoints para bloquear y desbloquear a un usuario
+    @PostMapping("/registered/{id}/block")
+    public String blockUser(@PathVariable(value = "id") Long idUsuario) {
+        Long idUsuarioLogeado = managerUserSession.usuarioLogeado();
+        if (idUsuarioLogeado == null) {
+            return "redirect:/login";
+        }
+
+        UsuarioData usuarioLogeado = usuarioService.findById(idUsuarioLogeado);
+        if (usuarioLogeado.getAdmin() == null || !usuarioLogeado.getAdmin()) {
+            throw new UsuarioNoAutorizadoException();
+        }
+
+        usuarioService.blockUser(idUsuario);
+        return "redirect:/registered";
+    }
+
+    @PostMapping("/registered/{id}/unblock")
+    public String unblockUser(@PathVariable(value = "id") Long idUsuario) {
+        Long idUsuarioLogeado = managerUserSession.usuarioLogeado();
+        if (idUsuarioLogeado == null) {
+            return "redirect:/login";
+        }
+
+        UsuarioData usuarioLogeado = usuarioService.findById(idUsuarioLogeado);
+        if (usuarioLogeado.getAdmin() == null || !usuarioLogeado.getAdmin()) {
+            throw new UsuarioNoAutorizadoException();
+        }
+
+        usuarioService.unblockUser(idUsuario);
+        return "redirect:/registered";
     }
 }

@@ -216,4 +216,53 @@ public class UsuarioServiceTest {
         // no existe admin
         assertThat(existeAdmin).isTrue();
     }
+
+    @Test
+    public void servicioBlockUser() {
+        // GIVEN
+        UsuarioData usuario = new UsuarioData();
+        usuario.setEmail("block@test.es");
+        usuario.setPassword("1234");
+        UsuarioData usuarioRegistrado = usuarioService.registrar(usuario);
+
+        // WHEN
+        usuarioService.blockUser(usuarioRegistrado.getId());
+
+        // THEN
+        UsuarioData usuarioBD = usuarioService.findById(usuarioRegistrado.getId());
+        assertThat(usuarioBD.getBlock()).isTrue();
+    }
+
+    @Test
+    public void servicioUnblockUser() {
+        // GIVEN
+        UsuarioData usuario = new UsuarioData();
+        usuario.setEmail("unblock@test.es");
+        usuario.setPassword("1234");
+        UsuarioData usuarioRegistrado = usuarioService.registrar(usuario);
+        usuarioService.blockUser(usuarioRegistrado.getId());
+
+        // WHEN
+        usuarioService.unblockUser((usuarioRegistrado.getId()));
+
+        // THEN
+        UsuarioData usuarioBD = usuarioService.findById(usuarioRegistrado.getId());
+        assertThat(usuarioBD.getBlock()).isFalse();
+    }
+
+    @Test
+    public void servicioLoginUsuarioBloqueadoDevuelveUserBlocked() {
+        // GIVEN
+        UsuarioData usuario = new UsuarioData();
+        usuario.setEmail("blocked@test.es");
+        usuario.setPassword("1234");
+        UsuarioData usuarioRegistrado = usuarioService.registrar(usuario);
+        usuarioService.blockUser(usuarioRegistrado.getId());
+
+        // WHEN
+        UsuarioService.LoginStatus loginStatus = usuarioService.login("blocked@test.es", "1234");
+
+        // THEN
+        assertThat(loginStatus).isEqualTo(UsuarioService.LoginStatus.USER_BLOCKED);
+    }
 }
